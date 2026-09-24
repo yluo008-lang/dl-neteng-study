@@ -13,7 +13,9 @@ function refreshProgress(){
   var b=document.querySelector('[data-checkin-btn]');
   if(b){var cur=parseInt(b.getAttribute('data-day')); b.textContent=isDone(cur)?'✓ 已完成，点击取消打卡':'完成本日学习打卡';}
 }
+function syncTo(n){n=Math.max(1,Math.min(28,parseInt(n)||0));for(var i=1;i<=n;i++) localStorage.setItem(dayKey(i),'1');refreshProgress();return n;}
 document.addEventListener('DOMContentLoaded',function(){
+  try{var q=new URLSearchParams(location.search).get('done');if(q){syncTo(q);history.replaceState(null,'',location.pathname+'#plan');}}catch(e){}
   refreshProgress();
   var b=document.querySelector('[data-checkin-btn]');
   if(b){b.addEventListener('click',function(){
@@ -21,6 +23,8 @@ document.addEventListener('DOMContentLoaded',function(){
     if(isDone(cur)) unmark(cur); else {markDone(cur); alert('太棒了！第 '+cur+' 天已打卡');}
     refreshProgress();
   });}
+  var sb=document.getElementById('syncBtn');
+  if(sb){sb.addEventListener('click',function(){var v=document.getElementById('syncN').value;var n=syncTo(v);alert('已同步到第 '+n+' 天');});}
   document.querySelectorAll('.quiz').forEach(function(q){
     var ans=q.getAttribute('data-ans');
     var exp=q.querySelector('.explain');
