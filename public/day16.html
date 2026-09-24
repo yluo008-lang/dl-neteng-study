@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第16天 流水十步 + Tensor并行</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第16天 / 28</span><span class="badge green">第3周 · 并行与RDMA</span> <span class="badge amber">约60分钟</span>
+<h2>流水十步 + Tensor并行</h2>
+<div class="tips">📖 对应 Ch8 Parallelism（下）</div>
+<div class="kv"><div><b>流水十步</b><br>25分钟</div><div><b>Tensor并行</b><br>20分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>看懂 10 步流水利用率 25%→100%→25%</li><li>解释 Tensor 并行切 Attention/FFN</li><li>理解三维并行混合使用</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="16">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 流水十步：利用率过山车</h3><p>书 p181-191 以 4 GPU、4 micro-batch 演示：第1步仅 1 卡 active（25%），第4步 4 卡全 active（100%），尾部又跌回 25%。结论：micro-batch 越多气泡占比越小，但通信（激活前传+梯度回传）越频繁，网络时延直接吃掉收益。</p><h3>2. Tensor并行：把一层切碎</h3><p>把 Attention 的 QKV/输出投影、FFN 的两层矩阵按列/行切到多卡，每卡算一块，再 AllReduce/AllGather 拼回。优点单层可并行、时延低；缺点每层前向+反向都要通信 2-4 次，对带宽+时延最敏感，多用 NVLink/同机 + IB/RoCE 跨机。</p><h3>3. 三维混合</h3><p>实战 = 数据 × 流水 × Tensor 混合：Tensor 组内（8卡同机），流水跨组，数据跨 Pod。网工要会看并行配置反推流量：Tensor=细碎高频，流水=点到点接力，数据=周期性 AllReduce 风暴。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch08_p185_x3311.jpg" alt="流水第4步：4卡全 active，利用率100%，前后皆气泡。"><figcaption>🔍 流水第4步：4卡全 active，利用率100%，前后皆气泡。<br><span class="src">📖 原图 · Ch8 p185 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch08_p197_x3526.jpg" alt="Tensor并行：矩阵切分多卡算，AllReduce拼回，每层都通信。"><figcaption>🔍 Tensor并行：矩阵切分多卡算，AllReduce拼回，每层都通信。<br><span class="src">📖 原图 · Ch8 p197 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>流水像 Segment Routing 接力，Tensor 像 ECMP 把一流打散多路径，数据像定时全网 telemetry 上报。三者 QoS 需求完全不同。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 流水利用率最高在？</h4><button class="opt" data-k="A">A. 中段多micro-batch重叠时</button><button class="opt" data-k="B">B. 首步</button><button class="opt" data-k="C">C. 尾步</button><button class="opt" data-k="D">D. 一直100%</button><div class="explain">💡 解析：首尾皆气泡。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 减小气泡的方法是？</h4><button class="opt" data-k="A">A. 增多micro-batch</button><button class="opt" data-k="B">B. 减少</button><button class="opt" data-k="C">C. 单卡</button><button class="opt" data-k="D">D. 停机</button><div class="explain">💡 解析：填空闲。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · Tensor并行切的是？</h4><button class="opt" data-k="A">A. 层内矩阵</button><button class="opt" data-k="B">B. 数据</button><button class="opt" data-k="C">C. 层间</button><button class="opt" data-k="D">D. 不切</button><div class="explain">💡 解析：细粒度。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · Tensor通信特点是？</h4><button class="opt" data-k="A">A. 高频小包、 sensitive to latency</button><button class="opt" data-k="B">B. 低频</button><button class="opt" data-k="C">C. 无通信</button><button class="opt" data-k="D">D. 只一次</button><div class="explain">💡 解析：每层多次。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 混合并行中Tensor一般放？</h4><button class="opt" data-k="A">A. 同机/NVLink组内</button><button class="opt" data-k="B">B. 跨洋</button><button class="opt" data-k="C">C. 随意</button><button class="opt" data-k="D">D. CPU</button><div class="explain">💡 解析：时延敏感就近。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>对照 Ten 步图，说出第1/4/10步各几卡 active，利用率多少。</p></div>
+<div class="nav2"><a href="day15.html">← 上一天</a><a href="index.html">目录</a><a href="day17.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

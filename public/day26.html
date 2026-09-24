@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第26天 NCCL 建连与广播同步</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第26天 / 28</span><span class="badge green">第4周 · AI Fabric实战</span> <span class="badge amber">约55分钟</span>
+<h2>NCCL 建连与广播同步</h2>
+<div class="tips">📖 对应 Ch14 NCCL（上）</div>
+<div class="kv"><div><b>软件栈</b><br>10分钟</div><div><b>UniqueId分发</b><br>25分钟</div><div><b>广播同步</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>列出 PyTorch+CUDA+NCCL 软件栈</li><li>复述 Master 分发 UniqueId 三步</li><li>理解广播同步参数</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="26">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 软件栈</h3><p>PyTorch（流程）+ CUDA（算）+ NCCL（通信）。训练启动先建 TCP 到 Master 拿 NCCL UniqueId，再建 GPU 间通信域。网工要放行 Master TCP 端口 + RoCE 数据面，这是 jobs 起不来的首查。</p><h3>2. UniqueId 分发三步</h3><p>① 各 rank 连 Master 建 TCP；② Master 下发 UniqueId；③ 各 GPU 凭 Id 建 NCCL 通道 + 广播对齐参数。书 p329-332 时序图，超时多为防火墙/路由/端口错。</p><h3>3. 广播同步</h3><p>Rank0 参数广播全员，保证起点一致，再各自吃不同 micro-batch。起点不齐，后面 AllReduce 全错。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch14_p332_x5294.jpg" alt="建连总览：TCP拿Id→建NCCL域→广播对齐，缺一不开工。"><figcaption>🔍 建连总览：TCP拿Id→建NCCL域→广播对齐，缺一不开工。<br><span class="src">📖 原图 · Ch14 p332 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch14_p335_x5342.jpg" alt="广播同步：Rank0参数分发全员，起点对齐。"><figcaption>🔍 广播同步：Rank0参数分发全员，起点对齐。<br><span class="src">📖 原图 · Ch14 p335 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>UniqueId 像 DHCP：先拿地址再通信；广播像配置下发，起点不齐全网错。排错先 ping Master、查端口。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · NCCL的作用？</h4><button class="opt" data-k="A">A. GPU集合通信库</button><button class="opt" data-k="B">B. 计算</button><button class="opt" data-k="C">C. 存储</button><button class="opt" data-k="D">D. 供电</button><div class="explain">💡 解析：通信。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 启动先拿？</h4><button class="opt" data-k="A">A. NCCL UniqueId</button><button class="opt" data-k="B">B. IP</button><button class="opt" data-k="C">C. 域名</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：凭Id建域。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · UniqueId经由？</h4><button class="opt" data-k="A">A. 到Master的TCP</button><button class="opt" data-k="B">B. UDP</button><button class="opt" data-k="C">C. 串口</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：稳。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 广播同步保证？</h4><button class="opt" data-k="A">A. 起点参数一致</button><button class="opt" data-k="B">B. 数据一致</button><button class="opt" data-k="C">C. 速度一致</button><button class="opt" data-k="D">D. 无用</button><div class="explain">💡 解析：对齐。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 起不来首查？</h4><button class="opt" data-k="A">A. Master连通+端口+路由</button><button class="opt" data-k="B">B. 显卡颜色</button><button class="opt" data-k="C">C. 时间</button><button class="opt" data-k="D">D. 主机名</button><div class="explain">💡 解析：网络先行。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>写出 jobs 启动三步 + 首查三项。</p></div>
+<div class="nav2"><a href="day25.html">← 上一天</a><a href="index.html">目录</a><a href="day27.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

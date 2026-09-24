@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第2天 人工神经元：加权求和与偏置</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第2天 / 28</span><span class="badge green">第1周 · 深度学习入门</span> <span class="badge amber">约55分钟</span>
+<h2>人工神经元：加权求和与偏置</h2>
+<div class="tips">📖 对应 Ch1 Artificial Neuron（上）</div>
+<div class="kv"><div><b>加权求和</b><br>20分钟</div><div><b>偏置项</b><br>15分钟</div><div><b>原图精读</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>写出 z = w0 + x1·w1 + x2·w2 并解释每项</li><li>理解权重 w 是“旋钮”，偏置 w0 是“起点”</li><li>看懂原书神经元结构图</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="2">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 神经元 = Σ求和器 + 非线性</h3><p>输入 x1、x2（比如两张流量特征：带宽利用率、队列深度），各自乘权重 w1、w2，再加偏置 w0，得到 z。公式：z = w0 + x1·w1 + x2·w2。权重决定“这个输入有多重要”，训练就是不断拧这些旋钮，让输出 ŷ 越来越接近真实值 y。</p><h3>2. 偏置 Bias：为什么需要 w0？</h3><p>没有偏置，直线必过原点，模型很笨。有了 w0（对应输入恒为 1 的 x0），模型可以整体平移。类比交换机 QoS：权重是各队列的权重，偏置是全局的阈值偏移。书中 p43-44 专门讲 bias term，这是新手最容易忽略却最重要的参数。</p><h3>3. 结合原图读数</h3><p>看本页第一张原图：左侧 x0/x1/x2 进入，中间 Σ 算出 z，右侧 Sigmoid 压到 0-1 输出 ŷ，下方曲线显示 z→ŷ 的映射。记住颜色：橙色是 z 路径，绿色是 ŷ 路径。考试常考：z 是加权和，ŷ 是激活后输出。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch01_p040_x1179.jpg" alt="神经元全景：x→[w]→Σ→z→Sigmoid→ŷ。注意 z = w0+(x1·w1)+(x2·w2)。"><figcaption>🔍 神经元全景：x→[w]→Σ→z→Sigmoid→ŷ。注意 z = w0+(x1·w1)+(x2·w2)。<br><span class="src">📖 原图 · Ch1 p40 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch01_p042_x1209.jpg" alt="加权求和细节：每个输入都有独立权重旋钮，训练即调 w。"><figcaption>🔍 加权求和细节：每个输入都有独立权重旋钮，训练即调 w。<br><span class="src">📖 原图 · Ch1 p42 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>把 w1/w2 想成 ECMP 两条链路权重，w0 想成基准 metric。调权重即调流量比，调偏置即调整体偏移。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · z 的正确公式是？</h4><button class="opt" data-k="A">A. z=w0+x1·w1+x2·w2</button><button class="opt" data-k="B">B. z=x1+x2</button><button class="opt" data-k="C">C. z=w0·w1·w2</button><button class="opt" data-k="D">D. z=ŷ²</button><div class="explain">💡 解析：偏置 + 每个输入×权重之和。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 权重 w 的作用是？</h4><button class="opt" data-k="A">A. 决定输入的重要性，训练中被调整</button><button class="opt" data-k="B">B. 固定不变</button><button class="opt" data-k="C">C. 只是装饰</button><button class="opt" data-k="D">D. 等于输入</button><div class="explain">💡 解析：训练本质就是调 w 和 bias。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 偏置 w0 对应输入是？</h4><button class="opt" data-k="A">A. 恒为1的 x0</button><button class="opt" data-k="B">B. 随机数</button><button class="opt" data-k="C">C. 输出 ŷ</button><button class="opt" data-k="D">D. 不需要输入</button><div class="explain">💡 解析：x0=1，所以 w0 直接相加，起平移作用。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · Σ 符号代表？</h4><button class="opt" data-k="A">A. 求和</button><button class="opt" data-k="B">B. 求积</button><button class="opt" data-k="C">C. 激活</button><button class="opt" data-k="D">D. 丢包</button><div class="explain">💡 解析：加权求和。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 没有偏置的模型缺点是？</h4><button class="opt" data-k="A">A. 决策边界必过原点，表达能力弱</button><button class="opt" data-k="B">B. 更准确</button><button class="opt" data-k="C">C. 更快收敛</button><button class="opt" data-k="D">D. 无影响</button><div class="explain">💡 解析：少了平移自由度。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>手算一次：x1=0.5,w1=0.4,x2=0.8,w2=0.6,w0=0.1，求 z。</p></div>
+<div class="nav2"><a href="day01.html">← 上一天</a><a href="index.html">目录</a><a href="day03.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第19天 AI Fabric 四大挑战</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第19天 / 28</span><span class="badge green">第3周 · 并行与RDMA</span> <span class="badge amber">约55分钟</span>
+<h2>AI Fabric 四大挑战</h2>
+<div class="tips">📖 对应 Ch10 Challenges</div>
+<div class="kv"><div><b>拓扑基线</b><br>10分钟</div><div><b>四大挑战</b><br>30分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>画出 Rail-Spine 基线拓扑</li><li>说出拥塞/单点/HOL/极化四大坑</li><li>为 Ch11-13 建立问题清单</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="19">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 基线：3主机×2GPU Rail 拓扑</h3><p>每主机 2 GPU + 双口 NIC，GPU0→Rail A，GPU1→Rail B，同 Rail 一跳，跨 Rail 要 Rail-Spine-Rail 三跳。机内 NVLink 快，机间 PCIe+网慢——慢的就是瓶颈。数据并行 6 micro-batch 均分 6 GPU，同步时多流并发，最易撞车。</p><h3>2. 四大挑战</h3><p>① Egress 拥塞：多对一（incast）打爆上行/下行队列；② 单点故障：单 Rail/单 Spine 挂掉 jobs 全停；③ HOL 阻塞：队头大包挡住后面小包（VOQ 可解）；④ Hash 极化 + ECMP：大象流哈希撞车，一条链路撑死、其余闲死。书 p225-231 每坑一图。</p><h3>3. 问题清单</h3><p>Ch11 答拥塞（ECN/PFC/DCQCN），Ch12 答极化（流/流片/包喷洒），Ch13 答拓扑（Rail 设计），Ch14 答同步（NCCL）。本课记住“病症”，后三天学“药方”。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch10_p224_x3860.jpg" alt="基线拓扑：同Rail一跳、跨Rail三跳，慢链路即瓶颈。"><figcaption>🔍 基线拓扑：同Rail一跳、跨Rail三跳，慢链路即瓶颈。<br><span class="src">📖 原图 · Ch10 p224 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch10_p232_x3957.jpg" alt="Hash极化：ECMP撞车，一条撑死、多条闲死。"><figcaption>🔍 Hash极化：ECMP撞车，一条撑死、多条闲死。<br><span class="src">📖 原图 · Ch10 p232 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>incast 像多台服务器同时备份到一台；HOL 像队头大车挡路；极化像 hash 不均的链路聚合，AI 版更极端（线速大象流）。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 跨Rail通信跳数是？</h4><button class="opt" data-k="A">A. 3跳 Rail-Spine-Rail</button><button class="opt" data-k="B">B. 1跳</button><button class="opt" data-k="C">C. 0</button><button class="opt" data-k="D">D. 5</button><div class="explain">💡 解析：同Rail才1跳。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · Incast 是？</h4><button class="opt" data-k="A">A. 多对一打爆egress</button><button class="opt" data-k="B">B. 一对多</button><button class="opt" data-k="C">C. 单播</button><button class="opt" data-k="D">D. 广播</button><div class="explain">💡 解析：同步典型。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · HOL阻塞是？</h4><button class="opt" data-k="A">A. 队头挡住队尾</button><button class="opt" data-k="B">B. 链路断</button><button class="opt" data-k="C">C. 路由错</button><button class="opt" data-k="D">D. 正常</button><div class="explain">💡 解析：队头大包。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · Hash极化导致？</h4><button class="opt" data-k="A">A. 负载不均、部分链路拥塞</button><button class="opt" data-k="B">B. 均衡</button><button class="opt" data-k="C">C. 提速</button><button class="opt" data-k="D">D. 无影响</button><div class="explain">💡 解析：撞车。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 单Rail故障影响？</h4><button class="opt" data-k="A">A. 相关jobs停滞</button><button class="opt" data-k="B">B. 无影响</button><button class="opt" data-k="C">C. 加速</button><button class="opt" data-k="D">D. 自动变快</button><div class="explain">💡 解析：单点。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>默画基线拓扑并标出 1 跳 vs 3 跳路径。</p></div>
+<div class="nav2"><a href="day18.html">← 上一天</a><a href="index.html">目录</a><a href="day20.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

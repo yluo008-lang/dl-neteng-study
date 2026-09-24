@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第22天 RDMA Write 报文 + Flow ECMP</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第22天 / 28</span><span class="badge green">第4周 · AI Fabric实战</span> <span class="badge amber">约55分钟</span>
+<h2>RDMA Write 报文 + Flow ECMP</h2>
+<div class="tips">📖 对应 Ch12 Load Balancing（上）</div>
+<div class="kv"><div><b>Write三段</b><br>20分钟</div><div><b>Flow+ECMP</b><br>20分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>拆解 Write First/Middle/Last</li><li>解释 Flow ECMP 为何不适合 AI</li><li>说出大象流的危害</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="22">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. RDMA Write 三段</h3><p>大梯度包拆多 MTU：First（含 R_Key/地址/长度+首段数据）、Middle（纯数据+PSN）、Last（尾段+完成标志）。网工抓包看 PSN 连续性即可判断乱序/丢包。书 p277-279 报文图必看。</p><h3>2. Flow ECMP：同流同路</h3><p>按五元组哈希，同流永远走同路。优点保序、简单；缺点 AI 全是线速大象流，撞车即长期拥塞，不自适应。BGP ECMP 虽成熟，但对 RoCE 后端是“抽奖式均衡”。书 p282 实测不均。</p><h3>3. 大象流危害</h3><p>AllReduce 时 N 路大象流同时起，ECMP 极化→某链路 100%、其余 30%，jobs 被最慢链路拖死。结论：Flow 够用在通用云，不够用在 AI 后端。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch12_p278_x4568.jpg" alt="Write First：带R_Key/地址/长度，Middle/Last 纯数据接力。"><figcaption>🔍 Write First：带R_Key/地址/长度，Middle/Last 纯数据接力。<br><span class="src">📖 原图 · Ch12 p278 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch12_p283_x4638.jpg" alt="Flow ECMP：同流同路，大象撞车即长期拥塞。"><figcaption>🔍 Flow ECMP：同流同路，大象撞车即长期拥塞。<br><span class="src">📖 原图 · Ch12 p283 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>Flow ECMP 像静态 hash 的 LAG：大象流=超大卡车长期占道，撞一起就堵死，绕都不绕。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · Write First 含？</h4><button class="opt" data-k="A">A. R_Key/地址/长度+首段</button><button class="opt" data-k="B">B. 只有数据</button><button class="opt" data-k="C">C. 主机名</button><button class="opt" data-k="D">D. 无</button><div class="explain">💡 解析：首包带元数据。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · Middle 靠什么排序？</h4><button class="opt" data-k="A">A. PSN</button><button class="opt" data-k="B">B. IP</button><button class="opt" data-k="C">C. MAC</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：包序号。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · Flow ECMP 路由依据？</h4><button class="opt" data-k="A">A. 五元组哈希同流同路</button><button class="opt" data-k="B">B. 逐包</button><button class="opt" data-k="C">C. 随机</button><button class="opt" data-k="D">D. 时延</button><div class="explain">💡 解析：保序但不均。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 不适合AI的原因？</h4><button class="opt" data-k="A">A. 大象流撞车不自适应</button><button class="opt" data-k="B">B. 太均衡</button><button class="opt" data-k="C">C. 太快</button><button class="opt" data-k="D">D. 太便宜</button><div class="explain">💡 解析：抽奖式。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 抓包排错先看？</h4><button class="opt" data-k="A">A. PSN连续性</button><button class="opt" data-k="B">B. 主机名</button><button class="opt" data-k="C">C. 时间</button><button class="opt" data-k="D">D. 颜色</button><div class="explain">💡 解析：断号即丢/乱序。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>画出 First/Middle/Last 三段，并注明 PSN 作用。</p></div>
+<div class="nav2"><a href="day21.html">← 上一天</a><a href="index.html">目录</a><a href="day23.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

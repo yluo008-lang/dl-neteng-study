@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第5天 反向传播：链式求导与权重更新</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第5天 / 28</span><span class="badge green">第1周 · 深度学习入门</span> <span class="badge amber">约60分钟</span>
+<h2>反向传播：链式求导与权重更新</h2>
+<div class="tips">📖 对应 Ch2 Backpropagation（下）</div>
+<div class="kv"><div><b>链式法则</b><br>25分钟</div><div><b>梯度与更新</b><br>15分钟</div><div><b>第二轮前向验证</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>说出链式法则三段：误差→激活→加权和</li><li>写出 Δw = -LR·梯度 的更新式</li><li>理解再做一次前向误差会变小</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="5">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 反向三段式</h3><p>书 p61-68 把反向拆成：① 对误差求导（输出错多少）② 对激活求导（Sigmoid 斜率）③ 对权重求导（输入贡献）。三者相乘 = 梯度（陡峭方向）。链式法则就是“错→斜率→贡献”连乘，别跳步。</p><h3>2. 权重更新：下山一步</h3><p>w_new = w_old - LR × 梯度（即 w -= LR·∇）。梯度告诉你“哪个方向最陡”，LR 决定“走多远”，负号表示“往误差减小走”。书中 p68-70 逐权重算 Δw，跟着算一次就通了。</p><h3>3. 第二轮前向：验证变好了吗？</h3><p>更新完再做一次前向，E 应该变小。如果没变小：LR 不对、算错导数、或陷入饱和。这是“闭环验证”思维，网工最熟：改完配置一定要再测一次。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch02_p063_x1499.jpg" alt="误差对输出求导：先量化“错多少”。"><figcaption>🔍 误差对输出求导：先量化“错多少”。<br><span class="src">📖 原图 · Ch2 p63 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch02_p068_x1603.jpg" alt="权重调整值 Δw 计算：梯度×学习率，负号下山。"><figcaption>🔍 权重调整值 Δw 计算：梯度×学习率，负号下山。<br><span class="src">📖 原图 · Ch2 p68 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>反向传播像故障回溯：先看 SLA 差多少（误差导数），再看哪段链路最敏感（激活斜率），最后定位到具体接口队列（权重贡献），然后调参再测。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 链式法则三段顺序是？</h4><button class="opt" data-k="A">A. 误差→激活→权重</button><button class="opt" data-k="B">B. 权重→激活→误差</button><button class="opt" data-k="C">C. 随机</button><button class="opt" data-k="D">D. 只算误差</button><div class="explain">💡 解析：由果推因连乘。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 权重更新公式是？</h4><button class="opt" data-k="A">A. w_new=w_old-LR·梯度</button><button class="opt" data-k="B">B. w_new=w_old+误差</button><button class="opt" data-k="C">C. w不变</button><button class="opt" data-k="D">D. w=0</button><div class="explain">💡 解析：负梯度方向走一步。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 梯度的几何含义是？</h4><button class="opt" data-k="A">A. 误差最陡的方向</button><button class="opt" data-k="B">B. 输入值</button><button class="opt" data-k="C">C. 学习率</button><button class="opt" data-k="D">D. 偏置</button><div class="explain">💡 解析：告诉你往哪走下降最快。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 更新后应该做什么？</h4><button class="opt" data-k="A">A. 再做前向验证误差是否减小</button><button class="opt" data-k="B">B. 直接上线</button><button class="opt" data-k="C">C. 删除模型</button><button class="opt" data-k="D">D. 增大误差</button><div class="explain">💡 解析：闭环验证。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 若误差没减小，优先检查？</h4><button class="opt" data-k="A">A. 学习率/求导/饱和</button><button class="opt" data-k="B">B. 网线颜色</button><button class="opt" data-k="C">C. 主机名</button><button class="opt" data-k="D">D. 时间</button><div class="explain">💡 解析：三者最可疑。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>默写更新公式并解释负号；用自己的话复述链式三段。</p></div>
+<div class="nav2"><a href="day04.html">← 上一天</a><a href="index.html">目录</a><a href="day06.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

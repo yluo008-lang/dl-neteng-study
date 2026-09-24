@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第11天 RNN 反向与梯度消失</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第11天 / 28</span><span class="badge green">第2周 · 模型架构</span> <span class="badge amber">约55分钟</span>
+<h2>RNN 反向与梯度消失</h2>
+<div class="tips">📖 对应 Ch5 RNN（下）</div>
+<div class="kv"><div><b>BPTT</b><br>20分钟</div><div><b>梯度消失/饱和</b><br>20分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>说出 BPTT 是误差沿时间倒流</li><li>解释长序列为何“忘记”历史</li><li>理解饱和神经元与 tanh/Sigmoid 的关系</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="11">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. BPTT：时间倒流的反向</h3><p>Backprop Through Time：把展开的每个时间步看成一层，误差从最后时刻倒推回第一时刻，每步都要乘激活导数与 W_h。若几十上百步连乘，小数×小数→趋零，大数×大数→爆炸。训练长序列极不稳定。</p><h3>2. 梯度消失 = 忘记历史</h3><p>书 p119-121 指出：tanh/Sigmoid 导数 ≤1（Sigmoid 最大 0.25），多步连乘迅速衰减，早期的输入对后期梯度几乎无贡献——网络“忘记”了远古历史。类比：口口相传几十手，首句话已失真。饱和（输出挤在两端、斜率≈0）会加剧此问题。</p><h3>3. 网工启示</h3><p>RNN 长序列训练 = 长时间步的同步+大显存占用，对网络是持续的中等流量 + 周期性同步。若模型总忘事，别只调网，要先怀疑模型结构——这正是 Ch6 LSTM 登场的理由。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch05_p121_x2360.jpg" alt="饱和神经元：挤在激活两端，导数≈0，学不动。"><figcaption>🔍 饱和神经元：挤在激活两端，导数≈0，学不动。<br><span class="src">📖 原图 · Ch5 p121 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch05_p123_x2387.jpg" alt="梯度沿时间连乘：步数越多，远端贡献越弱。"><figcaption>🔍 梯度沿时间连乘：步数越多，远端贡献越弱。<br><span class="src">📖 原图 · Ch5 p123 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>梯度消失像 SNMP 轮询链太长：每跳衰减一点，源头信息到 NMS 已淹没在噪声里。中继（LSTM 门控）就是加放大器。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · BPTT 是？</h4><button class="opt" data-k="A">A. 误差沿时间步倒流</button><button class="opt" data-k="B">B. 只算最后一步</button><button class="opt" data-k="C">C. 不需要反向</button><button class="opt" data-k="D">D. 随机更新</button><div class="explain">💡 解析：展开后逐层回推。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 梯度消失的数学原因是？</h4><button class="opt" data-k="A">A. 多个≤1导数连乘趋零</button><button class="opt" data-k="B">B. 学习率太大</button><button class="opt" data-k="C">C. 数据太多</button><button class="opt" data-k="D">D. GPU太快</button><div class="explain">💡 解析：连乘衰减。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 饱和会？</h4><button class="opt" data-k="A">A. 加剧梯度消失</button><button class="opt" data-k="B">B. 缓解</button><button class="opt" data-k="C">C. 无关</button><button class="opt" data-k="D">D. 加速</button><div class="explain">💡 解析：斜率≈0。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 梯度爆炸是？</h4><button class="opt" data-k="A">A. 连乘发散、更新过大</button><button class="opt" data-k="B">B. 梯度为零</button><button class="opt" data-k="C">C. 正常</button><button class="opt" data-k="D">D. 不存在</button><div class="explain">💡 解析：大数连乘。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 长序列RNN训练难，首先怀疑？</h4><button class="opt" data-k="A">A. 模型结构/梯度问题</button><button class="opt" data-k="B">B. 网线</button><button class="opt" data-k="C">C. 主机名</button><button class="opt" data-k="D">D. 时间</button><div class="explain">💡 解析：先模型后网络。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>解释“口口相传”与梯度消失的对应关系，写出 tanh 导数上界 1 的含义。</p></div>
+<div class="nav2"><a href="day10.html">← 上一天</a><a href="index.html">目录</a><a href="day12.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

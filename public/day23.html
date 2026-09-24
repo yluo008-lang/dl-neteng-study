@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第23天 Flowlet 与包喷洒</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第23天 / 28</span><span class="badge green">第4周 · AI Fabric实战</span> <span class="badge amber">约55分钟</span>
+<h2>Flowlet 与包喷洒</h2>
+<div class="tips">📖 对应 Ch12（下）</div>
+<div class="kv"><div><b>Flowlet</b><br>20分钟</div><div><b>包喷洒+重排</b><br>20分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>解释 Flowlet 按间隙自适应换路</li><li>说出包喷洒+重排机制</li><li>列出 Nexus 逐包配置要点</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="23">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. Flowlet：间隙即机会</h3><p>流内若出现空隙（&gt;阈值），后段可换路（自适应路由），既保序（间隙够大，下游已 drain）又均衡。优点改动小、兼容 ECMP；缺点阈值难调，AI 线速流间隙小，机会少。书 p284。</p><h3>2. 包喷洒 Packet Spraying：逐包 Round-Robin</h3><p>每包独立选路（轮询/负载感知），均衡极致，充分利用所有 Spine。代价乱序，需网卡/端点重排（PSN 重组 buffer），对 lossless + 重排能力要求高。AI 后端最爱：大象流被打碎，多路径并行。书 p286-287 + Nexus 每包配置 p289。</p><h3>3. 选型</h3><p>通用云 Flow 足矣；AI 训练 Flowlet 是过渡，喷洒是归宿。配置注意：喷洒必须全路径 MTU/ECN 一致 + 端点重排使能，否则乱序变丢包。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch12_p285_x4660.jpg" alt="Flowlet：遇间隙换路，保序又均衡，但间隙难等。"><figcaption>🔍 Flowlet：遇间隙换路，保序又均衡，但间隙难等。<br><span class="src">📖 原图 · Ch12 p285 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch12_p286_x4677.jpg" alt="包喷洒：逐包轮询多路，均衡极致，需端点重排。"><figcaption>🔍 包喷洒：逐包轮询多路，均衡极致，需端点重排。<br><span class="src">📖 原图 · Ch12 p286 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>Flowlet 像“车队有断档就换道”，喷洒像“每辆车独立导航”，后者最均但需终点停车场（重排 buffer）足够大。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · Flowlet换路条件是？</h4><button class="opt" data-k="A">A. 流内间隙超阈值</button><button class="opt" data-k="B">B. 随机</button><button class="opt" data-k="C">C. 从不</button><button class="opt" data-k="D">D. 每包</button><div class="explain">💡 解析：间隙即机会。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 包喷洒粒度是？</h4><button class="opt" data-k="A">A. 逐包</button><button class="opt" data-k="B">B. 逐流</button><button class="opt" data-k="C">C. 逐年</button><button class="opt" data-k="D">D. 不分</button><div class="explain">💡 解析：最细。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 喷洒的代价是？</h4><button class="opt" data-k="A">A. 乱序需重排</button><button class="opt" data-k="B">B. 无代价</button><button class="opt" data-k="C">C. 变慢</button><button class="opt" data-k="D">D. 不需要网络</button><div class="explain">💡 解析：PSN重组。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · AI后端首选？</h4><button class="opt" data-k="A">A. 喷洒</button><button class="opt" data-k="B">B. 单路</button><button class="opt" data-k="C">C. 随机丢</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：打碎大象。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 喷洒前置是？</h4><button class="opt" data-k="A">A. MTU/ECN一致+重排使能</button><button class="opt" data-k="B">B. 主机名</button><button class="opt" data-k="C">C. 时间</button><button class="opt" data-k="D">D. 颜色</button><div class="explain">💡 解析：否则乱序变丢。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>对比表：Flow / Flowlet / 喷洒（粒度/保序/均衡/代价）。</p></div>
+<div class="nav2"><a href="day22.html">← 上一天</a><a href="index.html">目录</a><a href="day24.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第20天 ECN + PFC + DCBX</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第20天 / 28</span><span class="badge green">第3周 · 并行与RDMA</span> <span class="badge amber">约60分钟</span>
+<h2>ECN + PFC + DCBX</h2>
+<div class="tips">📖 对应 Ch11 Congestion（上）</div>
+<div class="kv"><div><b>无拥塞基线</b><br>10分钟</div><div><b>ECN</b><br>20分钟</div><div><b>PFC+DCBX</b><br>20分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>描述无拥塞 RDMA Write 理想路径</li><li>解释 ECN 标记 vs 丢包</li><li>说出 PFC 逐跳暂停与 Headroom</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="20">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 理想基线：无拥塞 Write</h3><p>书 p237 GPU0→GPU3 无拥塞：报文 Rail A→Spine→Rail C 线速直达，时延最低、零抖动。这是优化目标：让所有同步都像独占链路。现实多流并发，队列一满就偏离基线。</p><h3>2. ECN：标记而不丢</h3><p>队列超阈值，交换机置 IP 头 ECN=11（CE），接收端回 CNP 给发送端降速。优点端到端、粒度细；缺点反应慢一拍（需往返）。类比：先亮黄灯而非直接扣车。书 p240-244 报文位+阈值。</p><h3>3. PFC：逐跳暂停</h3><p>基于 802.1Qbb，按优先级（DSCP→QoS 组）发 PAUSE 帧，上游停指定队列、不停其他。需预留 Headroom 防飞行包溢出；配 DCBX（LLDP 扩展）全网协商 PFC/DSCP 一致。滥用会 PFC 风暴 + HOL + 死锁，Ch11 下半讲 DCQCN 如何驯服它。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch11_p238_x4029.jpg" alt="无拥塞基线：线速直达，这是优化靶心。"><figcaption>🔍 无拥塞基线：线速直达，这是优化靶心。<br><span class="src">📖 原图 · Ch11 p238 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch11_p242_x4065.jpg" alt="ECN标记：超阈值置CE，收端回CNP降速。"><figcaption>🔍 ECN标记：超阈值置CE，收端回CNP降速。<br><span class="src">📖 原图 · Ch11 p242 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>ECN=黄灯减速，PFC=红灯指定车道停车，DCBX=全城信号灯配时协议。黄灯先亮（ECN 先于 xOFF，p258）才能少亮红灯。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · ECN=11 表示？</h4><button class="opt" data-k="A">A. 拥塞遭遇CE</button><button class="opt" data-k="B">B. 无拥塞</button><button class="opt" data-k="C">C. 丢包</button><button class="opt" data-k="D">D. 正常</button><div class="explain">💡 解析：标记。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · ECN优点是？</h4><button class="opt" data-k="A">A. 不丢包、端到端调速</button><button class="opt" data-k="B">B. 直接丢</button><button class="opt" data-k="C">C. 停全链路</button><button class="opt" data-k="D">D. 无用</button><div class="explain">💡 解析：黄灯。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · PFC粒度是？</h4><button class="opt" data-k="A">A. 按优先级逐跳暂停</button><button class="opt" data-k="B">B. 全停</button><button class="opt" data-k="C">C. 端到端</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：指定队列。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · Headroom 作用是？</h4><button class="opt" data-k="A">A. 容纳飞行包防溢出</button><button class="opt" data-k="B">B. 加速</button><button class="opt" data-k="C">C. 装饰</button><button class="opt" data-k="D">D. 省电</button><div class="explain">💡 解析：暂停间隙。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · DCBX 作用是？</h4><button class="opt" data-k="A">A. 全网协商PFC/DSCP一致</button><button class="opt" data-k="B">B. 路由</button><button class="opt" data-k="C">C. 加密</button><button class="opt" data-k="D">D. 供电</button><div class="explain">💡 解析：配时协议。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>一句话：ECN何时亮黄灯？PFC何时亮红灯？谁先谁后？</p></div>
+<div class="nav2"><a href="day19.html">← 上一天</a><a href="index.html">目录</a><a href="day21.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

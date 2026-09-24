@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第15天 数据并行 vs 模型并行</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第15天 / 28</span><span class="badge green">第3周 · 并行与RDMA</span> <span class="badge amber">约55分钟</span>
+<h2>数据并行 vs 模型并行</h2>
+<div class="tips">📖 对应 Ch8 Parallelism（上）</div>
+<div class="kv"><div><b>显存账单</b><br>15分钟</div><div><b>数据并行</b><br>20分钟</div><div><b>模型/流水</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>列出 GPU 显存 8 类占用</li><li>解释数据并行流程与 AllReduce</li><li>说出模型/流水并行的切分思想</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="15">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 显存账单：为什么单卡放不下？</h3><p>书 p176 图 8-1 列出：权重矩阵、z、激活 y、误差 E、本地/远端梯度、学习率、Δw，再加数据集与代码。LLM 百亿参数 FP16 就 20GB+，加上优化器状态×2-3倍，单卡 80GB 也紧张，必须并行。</p><h3>2. 数据并行：人人一份完整模型</h3><p>数据切 micro-batch，每 GPU 一份完整模型各自算梯度，再 AllReduce 平均同步后各自更新。优点简单、扩展好；缺点每卡仍要全模型 + 每次迭代都同步（流量大）。同步慢的一卡拖慢全体（straggler）。</p><h3>3. 模型/流水并行：把模型切开</h3><p>模型按层切给不同 GPU，前卡算完把激活传后卡（点到点）。朴素切分有气泡（后卡等前卡），流水线把 batch 再切 micro-batch 填气泡，但仍有 25%-100% 利用率波动（书 p181-191 十步演示）。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch08_p177_x3179.jpg" alt="显存八件套：权重/z/激活/误差/梯度/LR/Δw + 数据代码，单卡告急。"><figcaption>🔍 显存八件套：权重/z/激活/误差/梯度/LR/Δw + 数据代码，单卡告急。<br><span class="src">📖 原图 · Ch8 p177 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch08_p180_x3216.jpg" alt="数据并行：各卡算梯度→AllReduce同步→各自更新。"><figcaption>🔍 数据并行：各卡算梯度→AllReduce同步→各自更新。<br><span class="src">📖 原图 · Ch8 p180 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>数据并行同步 = 全员对账，AllReduce 流量是典型的多对多 elephant；流水气泡 = 流水线服务链中某 VNF 慢导致空转，利用率波动要会算。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 单卡放不下的主因是？</h4><button class="opt" data-k="A">A. 参数+梯度+优化器+激活全占显存</button><button class="opt" data-k="B">B. 网线不够</button><button class="opt" data-k="C">C. CPU太慢</button><button class="opt" data-k="D">D. 数据太小</button><div class="explain">💡 解析：八件套+数据代码。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 数据并行的同步用？</h4><button class="opt" data-k="A">A. AllReduce平均梯度</button><button class="opt" data-k="B">B. 单播</button><button class="opt" data-k="C">C. 不需要</button><button class="opt" data-k="D">D. 广播配置</button><div class="explain">💡 解析：集合通信。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 数据并行的缺点是？</h4><button class="opt" data-k="A">A. 每卡仍全模型+频繁同步</button><button class="opt" data-k="B">B. 不需要网络</button><button class="opt" data-k="C">C. 不能扩展</button><button class="opt" data-k="D">D. 无缺点</button><div class="explain">💡 解析：流量大。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 流水气泡是？</h4><button class="opt" data-k="A">A. 先后依赖导致的空闲</button><button class="opt" data-k="B">B. 气体</button><button class="opt" data-k="C">C. 丢包</button><button class="opt" data-k="D">D. 链路故障</button><div class="explain">💡 解析：后卡等前卡。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · Straggler效应是？</h4><button class="opt" data-k="A">A. 最慢卡拖慢全体</button><button class="opt" data-k="B">B. 最快卡</button><button class="opt" data-k="C">C. 无影响</button><button class="opt" data-k="D">D. 自动加速</button><div class="explain">💡 解析：同步木桶效应。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>用一句话区分数据并行（切数据）与模型并行（切模型）。</p></div>
+<div class="nav2"><a href="day14.html">← 上一天</a><a href="index.html">目录</a><a href="day16.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

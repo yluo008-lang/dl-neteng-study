@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第6天 多分类：MNIST + Softmax + 交叉熵</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第6天 / 28</span><span class="badge green">第1周 · 深度学习入门</span> <span class="badge amber">约55分钟</span>
+<h2>多分类：MNIST + Softmax + 交叉熵</h2>
+<div class="tips">📖 对应 Ch3 Multi-Class（上）</div>
+<div class="kv"><div><b>MNIST</b><br>15分钟</div><div><b>Softmax</b><br>20分钟</div><div><b>交叉熵</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>描述 MNIST 数据集（28×28 灰度手写数字）</li><li>解释 Softmax 把分数变成概率分布</li><li>理解交叉熵 Loss 越小越准</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="6">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. MNIST：Hello World 数据集</h3><p>6万训练 + 1万测试，28×28 灰度图（784 个输入特征）。任务：0-9 十选一。网工类比：像“流量分类”——把一条流分到 10 类应用。数据虽小，但流程（前向概率→算 Loss→反向调参）与大模型一致。</p><h3>2. Softmax：分数→概率</h3><p>10 个神经元各输出一个分数 z_i，Softmax：p_i = e^{z_i}/Σe^{z_j}，10 个概率和为 1，最大者即预测。比如输出 [0.05,0.8,…] 就判为“1”。它让模型“既给答案又给信心”。</p><h3>3. 交叉熵：猜得有多离谱？</h3><p>Loss = -Σ y_i·log(p_i)，真实类 y=1，其余 0。若真相是“7”但模型只给 10% 概率，Loss 很大；给 90% 则很小。训练目标就是让 Loss 越来越小。比平方误差更适合分类。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch03_p079_x1749.jpg" alt="MNIST 示例：28×28 灰度手写数字，10 分类任务。"><figcaption>🔍 MNIST 示例：28×28 灰度手写数字，10 分类任务。<br><span class="src">📖 原图 · Ch3 p79 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch03_p082_x1795.jpg" alt="Softmax：指数归一化，输出和为1的概率分布。"><figcaption>🔍 Softmax：指数归一化，输出和为1的概率分布。<br><span class="src">📖 原图 · Ch3 p82 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>Softmax 像 WRR 调度后的带宽占比（和为100%）；交叉熵像“误分类代价”，猜错越自信罚越重，类似 SLA 违约金。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · MNIST 图像尺寸是？</h4><button class="opt" data-k="A">A. 28×28灰度</button><button class="opt" data-k="B">B. 224×224彩色</button><button class="opt" data-k="C">C. 1×1</button><button class="opt" data-k="D">D. 1080p</button><div class="explain">💡 解析：小图，784 输入。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · Softmax 输出特点是？</h4><button class="opt" data-k="A">A. 和为1的概率分布</button><button class="opt" data-k="B">B. 和为0</button><button class="opt" data-k="C">C. 可为负</button><button class="opt" data-k="D">D. 只有一个1其余随机</button><div class="explain">💡 解析：指数归一化。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 交叉熵 Loss 越小说明？</h4><button class="opt" data-k="A">A. 预测越准</button><button class="opt" data-k="B">B. 越不准</button><button class="opt" data-k="C">C. 无关</button><button class="opt" data-k="D">D. 过拟合</button><div class="explain">💡 解析：训练目标即降 Loss。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 10 分类需要几个输出神经元？</h4><button class="opt" data-k="A">A. 10</button><button class="opt" data-k="B">B. 1</button><button class="opt" data-k="C">C. 2</button><button class="opt" data-k="D">D. 100</button><div class="explain">💡 解析：每类一个分数。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · Softmax 中 e^{z} 的作用是？</h4><button class="opt" data-k="A">A. 放大差距且保证为正，便于归一</button><button class="opt" data-k="B">B. 减小差距</button><button class="opt" data-k="C">C. 变负数</button><button class="opt" data-k="D">D. 无用</button><div class="explain">💡 解析：指数让大者更大。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>举例：真相是 3，模型给 3 的概率 0.7 vs 0.1，哪种 Loss 更大？为什么？</p></div>
+<div class="nav2"><a href="day05.html">← 上一天</a><a href="index.html">目录</a><a href="day07.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

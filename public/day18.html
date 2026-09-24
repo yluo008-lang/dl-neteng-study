@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第18天 RDMA 建连与 Work Request</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第18天 / 28</span><span class="badge green">第3周 · 并行与RDMA</span> <span class="badge amber">约50分钟</span>
+<h2>RDMA 建连与 Work Request</h2>
+<div class="tips">📖 对应 Ch9 RDMA（下）</div>
+<div class="kv"><div><b>建连</b><br>20分钟</div><div><b>WR报文</b><br>15分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>说出 RDMA CM 建连三步</li><li>看懂 RDMA Write 报文关键字段</li><li>理解 lesion：丢一个包就重训，网络必须 lossless</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="18">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 建连：先握手再传数</h3><p>RDMA CM over TCP：交换 QP 号、R_Key、内存地址；转 UDP 建 RoCE 连接；之后 Work Request（RDMA Write/Read/Send）直接走数据面。控制面 TCPpipe 稳，数据面 UDP 求快——与网工“带外管理+带内转发”异曲同工。</p><h3>2. Work Request 报文</h3><p>RDMA Write 含：R_Key + 远端地址 + 长度 + 数据。网卡收到后校验 R_Key，直写应用内存，回 ACK/CQ。书 p217-219 报文拆解 + p219 配置要点（MTU、DSCP、PFC 使能）务必看。中间丢包→重传→训练停顿，极端重开整轮。</p><h3>3. 网工 checklist</h3><p>RoCE 前置：全路径 MTU 一致（9000）、PFC/ECN/DCQCN（Ch11）、ECMP/喷洒（Ch12）、Rail 拓扑（Ch13）。RDMA 把可靠性外包给了 Fabric，网配错一个，训练慢十倍。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch09_p215_x3743.jpg" alt="建连握手：换QP号/R_Key/地址，控制TCP、数据UDP。"><figcaption>🔍 建连握手：换QP号/R_Key/地址，控制TCP、数据UDP。<br><span class="src">📖 原图 · Ch9 p215 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch09_p217_x3765.jpg" alt="Work Request：R_Key+地址+长度+数据，直写远端内存。"><figcaption>🔍 Work Request：R_Key+地址+长度+数据，直写远端内存。<br><span class="src">📖 原图 · Ch9 p217 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>RDMA 建连像 BGP 建邻居（先换参数再传路由）；Write 报文像带认证的 SNMP SET，直写远端，认证错则拒写。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · RDMA建连控制面用？</h4><button class="opt" data-k="A">A. TCP交换参数</button><button class="opt" data-k="B">B. 直接UDP</button><button class="opt" data-k="C">C. 不需要</button><button class="opt" data-k="D">D. 串口</button><div class="explain">💡 解析：稳字当头。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · RDMA Write必须带？</h4><button class="opt" data-k="A">A. R_Key+地址+长度</button><button class="opt" data-k="B">B. 只有数据</button><button class="opt" data-k="C">C. 主机名</button><button class="opt" data-k="D">D. VLAN</button><div class="explain">💡 解析：缺一即拒写。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 丢包对RDMA训练的影响？</h4><button class="opt" data-k="A">A. 停顿重传，严重重开</button><button class="opt" data-k="B">B. 无影响</button><button class="opt" data-k="C">C. 加速</button><button class="opt" data-k="D">D. 自动忽略</button><div class="explain">💡 解析：lossless 必需。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · RoCE前置不包括？</h4><button class="opt" data-k="A">A. 主机名美观</button><button class="opt" data-k="B">B. MTU一致</button><button class="opt" data-k="C">C. PFC/ECN</button><button class="opt" data-k="D">D. 负载均衡</button><div class="explain">💡 解析：前三者必备。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 数据面走？</h4><button class="opt" data-k="A">A. UDP/RoCE</button><button class="opt" data-k="B">B. TCP</button><button class="opt" data-k="C">C. ICMP</button><button class="opt" data-k="D">D. ARP</button><div class="explain">💡 解析：快。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>列出 RoCE 上线前 4 项网络检查（MTU/PFC/ECN/负载）。</p></div>
+<div class="nav2"><a href="day17.html">← 上一天</a><a href="index.html">目录</a><a href="day19.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

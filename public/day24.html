@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第24天 GPU I/O：共享网卡 vs 独立网卡</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第24天 / 28</span><span class="badge green">第4周 · AI Fabric实战</span> <span class="badge amber">约55分钟</span>
+<h2>GPU I/O：共享网卡 vs 独立网卡</h2>
+<div class="tips">📖 对应 Ch13 Topologies（上）</div>
+<div class="kv"><div><b>共享NIC</b><br>20分钟</div><div><b>每GPU独立</b><br>20分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>画出共享 NIC 瓶颈</li><li>解释每 GPU 独立 NIC + Rail 亲和</li><li>理解 PCIe 瓶颈</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="24">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 共享 NIC：便宜但堵</h3><p>多 GPU 共用一两块 NIC，机内先抢 PCIe/NIC 出口，再抢 Fabric。优点省卡省口；缺点 incast + 单点 + noisy neighbor，AllReduce 稍大就排队。书 p293 小规模/推理可接受，训练慎用。</p><h3>2. 每 GPU 独立 NIC：Rail 亲和</h3><p>一 GPU 一 NIC（甚至双口），GPU0→Rail A、GPU1→Rail B……，流量天然分 Rail，故障域隔离，带宽 1:1。代价卡多、口多、线多、钱多。书 p296-299 是主流训练标配。记住：NIC 要贴着 GPU（PCIe 亲和），别跨 NUMA。</p><h3>3. PCIe 是暗瓶颈</h3><p>NVLink 机内 900GB/s，PCIe Gen5 x16 约 64GB/s，网 400G 约 50GB/s——机内快、出去慢，出向设计决定上限。网工排查先看 PCIe 计数器再看 Fabric。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch13_p296_x4789.jpg" alt="共享NIC：多GPU抢一出口，省钱但堵+单点。"><figcaption>🔍 共享NIC：多GPU抢一出口，省钱但堵+单点。<br><span class="src">📖 原图 · Ch13 p296 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch13_p298_x4812.jpg" alt="每GPU独立NIC + Rail亲和：1:1带宽，训练标配。"><figcaption>🔍 每GPU独立NIC + Rail亲和：1:1带宽，训练标配。<br><span class="src">📖 原图 · Ch13 p298 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>共享像整栋楼共用一上行，独立像每户专线。训练=全员同时 4K 直播，必须专线。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 共享NIC缺点是？</h4><button class="opt" data-k="A">A. 抢出口+单点+相互干扰</button><button class="opt" data-k="B">B. 更贵</button><button class="opt" data-k="C">C. 更快</button><button class="opt" data-k="D">D. 无缺点</button><div class="explain">💡 解析：便宜但堵。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · Rail亲和是？</h4><button class="opt" data-k="A">A. GPU与Rail固定对应分流</button><button class="opt" data-k="B">B. 随机</button><button class="opt" data-k="C">C. 全走一Rail</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：天然分担。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 训练标配是？</h4><button class="opt" data-k="A">A. 每GPU独立NIC</button><button class="opt" data-k="B">B. 共享</button><button class="opt" data-k="C">C. 无网卡</button><button class="opt" data-k="D">D. WiFi</button><div class="explain">💡 解析：1:1。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 暗瓶颈是？</h4><button class="opt" data-k="A">A. PCIe（机内快出去慢）</button><button class="opt" data-k="B">B. NVLink</button><button class="opt" data-k="C">C. 内存</button><button class="opt" data-k="D">D. CPU</button><div class="explain">💡 解析：先查PCIe。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · NIC部署注意？</h4><button class="opt" data-k="A">A. PCIe/NUMA亲和</button><button class="opt" data-k="B">B. 随意</button><button class="opt" data-k="C">C. 越远越好</button><button class="opt" data-k="D">D. 无所谓</button><div class="explain">💡 解析：就近。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>画两种 I/O 对比，标出瓶颈点。</p></div>
+<div class="nav2"><a href="day23.html">← 上一天</a><a href="index.html">目录</a><a href="day25.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

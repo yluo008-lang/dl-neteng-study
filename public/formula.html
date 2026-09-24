@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>公式一页通 · 4周学习站</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+<div class="card"><span class="badge"> cheat sheet</span><span class="badge green">6 个必记</span><span class="badge amber">其余只看结论</span>
+<h2>公式一页通：网工版</h2>
+<p class="tips">记住"一句话含义 + 网络类比"即可，不用死磕推导。点 Day 链接回看当天详解与原图。</p></div>
+<div class="card"><h3 style="border:0;padding:0">① 加权求和 <a href="day02.html">→ Day2</a></h3>
+<div class="formula">z = w0 + x1·w1 + x2·w2</div>
+<p><b>一句话：</b>输入×重要性再求和，训练就是拧权重旋钮。<b>网络类比：</b>w 是 ECMP 权重，w0 是基准 metric。</p></div>
+<div class="card"><h3 style="border:0;padding:0">② 激活函数 <a href="day03.html">→ Day3</a></h3>
+<div class="formula">Sigmoid: σ(z)=1/(1+e^{-z}) → (0,1) ｜ ReLU: max(0,z)</div>
+<p><b>一句话：</b>Sigmoid 把分数压成概率但两端易饱和；ReLU 正值通过、算得快，深层默认用它。<b>网络类比：</b>前者像 policer 压平，后者像低于阈值丢弃。</p></div>
+<div class="card"><h3 style="border:0;padding:0">③ 误差与更新 <a href="day04.html">→ Day4</a> <a href="day05.html">→ Day5</a></h3>
+<div class="formula">E = (y - ŷ)² ｜ w_new = w_old − LR × 梯度</div>
+<p><b>一句话：</b>E 是 SLA 缺口，梯度指最陡方向，LR 定步长，负号表示往好的方向走。<b>网络类比：</b>LR 太大如 OSPF cost 调太激进会震荡，太小如窗口涨太慢利用率低。链式三段（误差→激活→权重）会复述即可。</p></div>
+<div class="card"><h3 style="border:0;padding:0">④ Softmax + 交叉熵 <a href="day06.html">→ Day6</a></h3>
+<div class="formula">p_i = e^{z_i} / Σe^{z_j} ｜ Loss = −Σ y_i·log(p_i)</div>
+<p><b>一句话：</b>Softmax 把 10 个分数变成和为 1 的概率；交叉熵是"猜错越自信罚越重"。Loss 越小越准。</p></div>
+<div class="card"><h3 style="border:0;padding:0">⑤ 注意力 <a href="day14.html">→ Day14</a></h3>
+<div class="formula">Attention = Softmax(Q·Kᵀ / √d_k) · V</div>
+<p><b>一句话：</b>Q 查 K 得权重，加权 V 得上下文；除以 √d 防点积过大饱和。<b>网络类比：</b>Q 是目的前缀，K 是 RIB，V 是下一跳。多头 = 并行查多张表。</p></div>
+<div class="card"><h3 style="border:0;padding:0">⑥ AllReduce 流量 <a href="day27.html">→ Day27</a></h3>
+<div class="formula">流量 ≈ 2(N−1)/N × 数据量 ｜ 步数 = 2(N−1)</div>
+<p><b>一句话：</b>Ring 先分段求和（ReduceScatter）再收集拼全（AllGather）；N 越大越均匀。GPU 周期性掉零先查同步是否被网拖住。</p></div>
+<div class="card"><h3 style="border:0;padding:0">⏭️ 可以只看结论的（别纠结）</h3>
+<ul><li>Day5 链式求导的具体数值、Day7 梯度分摊表 —— 会复述方向即可</li><li>Ch5 BPTT 沿时间连乘的数学 —— 记住"口口相传会失真"即可</li><li>LSTM 三门方程 —— 记住 f 丢旧、i 存新、o 拿去输出即可 <a href="day12.html">→ Day12</a></li><li>Tensor 并行的矩阵切分 —— 记住"层内切碎、高频小包"即可 <a href="day16.html">→ Day16</a></li></ul></div>
+<div class="nav2"><a href="index.html">← 首页</a><a href="day01.html">从 Day1 开始</a><a href="day02.html">Day2 →</a></div>
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html">🏠<br>首页</a>
+<a href="day01.html">📚<br>课程</a>
+<a href="index.html#plan">🗓<br>计划</a>
+<a href="index.html#how">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

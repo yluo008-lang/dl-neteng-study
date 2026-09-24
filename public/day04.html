@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第4天 前向传播与学习率</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第4天 / 28</span><span class="badge green">第1周 · 深度学习入门</span> <span class="badge amber">约60分钟</span>
+<h2>前向传播与学习率</h2>
+<div class="tips">📖 对应 Ch2 Backpropagation（上）</div>
+<div class="kv"><div><b>双神经元前向</b><br>25分钟</div><div><b>误差函数</b><br>15分钟</div><div><b>学习率</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>手算两神经元网络的前向输出</li><li>写出平方误差 E=(y-ŷ)² 的含义</li><li>解释学习率太大/太小各有什么后果</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="4">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 最小的 FFNN：两个神经元</h3><p>Ch2 用两个神经元组成最小前向网络：输入→隐藏神经元→输出神经元。每个都做“加权和→激活”。前向就是一层层算过去得到 ŷ。书 p55-57 一步步给数字，跟着算一遍比看十遍管用。</p><h3>2. 误差 Error：差多少？</h3><p>用平方误差 E = (y - ŷ)²（或 1/2 倍）衡量“预测与真相差多远”。E 越大，说明权重越离谱，后面反向要大调；E 越小，微调即可。记住：前向算 ŷ，反向靠 E 指导调参。</p><h3>3. 学习率 LR：步子多大？</h3><p>LR 是每次更新的步长。太大：来回震荡甚至发散（像 OSPF cost 调得太激进，来回翻）；太小：走得慢、卡在局部。书 p59 强调 LR 是超参数，需试。网工记忆法：LR = TCP 拥塞窗口增大幅度，太大丢包，太小利用率低。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch02_p056_x1410.jpg" alt="双神经元前向：输入→隐藏→输出，逐层算 z 和 ŷ。"><figcaption>🔍 双神经元前向：输入→隐藏→输出，逐层算 z 和 ŷ。<br><span class="src">📖 原图 · Ch2 p56 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch02_p060_x1460.jpg" alt="学习率示意：步长决定收敛速度与稳定性。"><figcaption>🔍 学习率示意：步长决定收敛速度与稳定性。<br><span class="src">📖 原图 · Ch2 p60 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>前向≈发包探测，误差≈SLA 未达标程度，学习率≈调整策略的激进程度。调参如调网：小步验证、大步易震荡。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 前向传播的作用是？</h4><button class="opt" data-k="A">A. 由输入算出预测 ŷ</button><button class="opt" data-k="B">B. 更新权重</button><button class="opt" data-k="C">C. 算梯度</button><button class="opt" data-k="D">D. 配 VLAN</button><div class="explain">💡 解析：先算出预测，才有误差可纠。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 平方误差 E 越大说明？</h4><button class="opt" data-k="A">A. 预测越离谱，需更大调整</button><button class="opt" data-k="B">B. 预测越准</button><button class="opt" data-k="C">C. 无意义</button><button class="opt" data-k="D">D. 学习率越大</button><div class="explain">💡 解析：E 指导调整幅度。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 学习率太大的后果？</h4><button class="opt" data-k="A">A. 震荡/发散</button><button class="opt" data-k="B">B. 一定更快更好</button><button class="opt" data-k="C">C. 无影响</button><button class="opt" data-k="D">D. 自动变小</button><div class="explain">💡 解析：步子迈太大越过最优点。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 学习率太小的后果？</h4><button class="opt" data-k="A">A. 收敛慢、易卡住</button><button class="opt" data-k="B">B. 一步到位</button><button class="opt" data-k="C">C. 直接发散</button><button class="opt" data-k="D">D. 不需要训练</button><div class="explain">💡 解析：走得太慢。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · Ch2 最小网络有几个神经元？</h4><button class="opt" data-k="A">A. 2</button><button class="opt" data-k="B">B. 100</button><button class="opt" data-k="C">C. 1</button><button class="opt" data-k="D">D. 0</button><div class="explain">💡 解析：两神经元足以讲清反向传播。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>默写：前向三步（加权和→激活→算误差），并举一个“步长太大翻车”的运维例子。</p></div>
+<div class="nav2"><a href="day03.html">← 上一天</a><a href="index.html">目录</a><a href="day05.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

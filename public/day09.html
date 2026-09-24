@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第9天 CNN 全连接与反向传播</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第9天 / 28</span><span class="badge green">第2周 · 模型架构</span> <span class="badge amber">约50分钟</span>
+<h2>CNN 全连接与反向传播</h2>
+<div class="tips">📖 对应 Ch4 CNN（下）</div>
+<div class="kv"><div><b>两层卷积+全连接</b><br>20分钟</div><div><b>CNN反向</b><br>15分钟</div><div><b>测验</b><br>15分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>画出两层卷积+CNN全流程</li><li>理解误差如何穿过池化/卷积层</li><li>记住 CNN 的网络含义：参数少但特征图同步仍需通信</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="9">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 完整前向：越深越抽象</h3><p>第一层找边，第二层组装成纹理/部件，最后展平（flatten）进全连接做 10 分类。书 p100-105 跟踪两层卷积+池化尺寸变化，这是读懂模型日志（如 shape [28,28,1]→[14,14,8]）的基本功。</p><h3>2. CNN 的反向：误差倒着穿回去</h3><p>全连接层按 Ch2/Ch3 方法算梯度；到池化层，误差只回传给当初的最大值位置（其余为0）；到卷积层，误差与输入做卷积得到核的梯度，再更新核。记住一句：前向怎么来，反向怎么回。</p><h3>3. 网工视角</h3><p>CNN 参数比 FNN 少得多，但训练仍是数据并行+梯度同步，AllReduce 流量依然可观。只是单卡压力小了，对 Fabric 的绝对带宽要求略降——但集合通信模式没变。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch04_p103_x2118.jpg" alt="第二卷积层：特征越深越抽象（边→纹理→部件）。"><figcaption>🔍 第二卷积层：特征越深越抽象（边→纹理→部件）。<br><span class="src">📖 原图 · Ch4 p103 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch04_p105_x2158.jpg" alt="展平+全连接：特征图拉直后做分类，反向从此开始倒推。"><figcaption>🔍 展平+全连接：特征图拉直后做分类，反向从此开始倒推。<br><span class="src">📖 原图 · Ch4 p105 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>池化反向“只回最大值位置”像 traceroute 只回显关键跳；卷积更新像根据采样结果微调 ACL 模板。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · CNN深层特征的特点是？</h4><button class="opt" data-k="A">A. 越深越抽象</button><button class="opt" data-k="B">B. 越深越像素</button><button class="opt" data-k="C">C. 不变</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：边→纹理→部件→物体。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · Flatten 的作用是？</h4><button class="opt" data-k="A">A. 特征图拉直送全连接</button><button class="opt" data-k="B">B. 压缩成1个数</button><button class="opt" data-k="C">C. 加密</button><button class="opt" data-k="D">D. 丢弃</button><div class="explain">💡 解析：连接卷积与分类。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · MaxPooling反向时误差传给？</h4><button class="opt" data-k="A">A. 当初最大值位置</button><button class="opt" data-k="B">B. 所有位置平均</button><button class="opt" data-k="C">C. 随机</button><button class="opt" data-k="D">D. 不传</button><div class="explain">💡 解析：只有胜者承接梯度。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 卷积核的梯度由什么算出？</h4><button class="opt" data-k="A">A. 误差与输入做卷积</button><button class="opt" data-k="B">B. 随机</button><button class="opt" data-k="C">C. 常数</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：前向点乘，反向卷积。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · CNN对网络的意义是？</h4><button class="opt" data-k="A">A. 参数减少但同步模式不变</button><button class="opt" data-k="B">B. 不需要网络</button><button class="opt" data-k="C">C. 只用单机</button><button class="opt" data-k="D">D. 无训练</button><div class="explain">💡 解析：仍需 AllReduce。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>画出 CNN 前向→反向回路，标出池化“胜者回传”。</p></div>
+<div class="nav2"><a href="day08.html">← 上一天</a><a href="index.html">目录</a><a href="day10.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

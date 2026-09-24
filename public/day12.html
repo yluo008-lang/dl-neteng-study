@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第12天 LSTM：三道门的记忆宫殿</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第12天 / 28</span><span class="badge green">第2周 · 模型架构</span> <span class="badge amber">约60分钟</span>
+<h2>LSTM：三道门的记忆宫殿</h2>
+<div class="tips">📖 对应 Ch6 LSTM</div>
+<div class="kv"><div><b>遗忘门</b><br>15分钟</div><div><b>输入门</b><br>15分钟</div><div><b>输出门+全景</b><br>20分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>画出遗忘/输入/输出三门位置</li><li>解释细胞状态 C 是“传送带”</li><li>说出 LSTM 为何能记上千步</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="12">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 细胞状态：历史传送带</h3><p>LSTM 新增一条细胞状态 C_t，像传送带贯穿所有时间步，信息可直通、少衰减。三个门（都是 Sigmoid 0-1 开关 + 点乘）控制“丢什么、记什么、说什么”。</p><h3>2. 三门分工</h3><p>遗忘门 f：决定丢掉多少旧记忆（0全忘，1全留）；输入门 i：决定存入多少新内容（配合 tanh 候选）；输出门 o：决定拿多少记忆去输出。公式：C_t = f·C_{t-1} + i·候选，h_t = o·tanh(C_t)。书 p132-136 逐门演示。</p><h3>3. 为什么能记很久？</h3><p>C 的更新是加法（不是反复乘 W），梯度可沿传送带直通，远端误差不被连乘抹掉。代价是参数约为 RNN 4 倍，训练更重、对 Fabric 带宽更渴求。网工记住：精度用算力/带宽换来。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch06_p131_x2485.jpg" alt="LSTM全景：三门 + 细胞传送带，一眼看懂结构。"><figcaption>🔍 LSTM全景：三门 + 细胞传送带，一眼看懂结构。<br><span class="src">📖 原图 · Ch6 p131 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch06_p134_x2527.jpg" alt="遗忘门：Sigmoid 输出 0-1，控制旧记忆保留比。"><figcaption>🔍 遗忘门：Sigmoid 输出 0-1，控制旧记忆保留比。<br><span class="src">📖 原图 · Ch6 p134 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>三门像防火墙策略：遗忘=aging 老表项，输入=permit 新会话，输出=NAT 后放行。C 是连接跟踪表，直通不断。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 细胞状态 C 的作用是？</h4><button class="opt" data-k="A">A. 历史传送带，直通防遗忘</button><button class="opt" data-k="B">B. 输出标签</button><button class="opt" data-k="C">C. 学习率</button><button class="opt" data-k="D">D. 无用</button><div class="explain">💡 解析：加法直通。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 遗忘门输出 0/1 分别表示？</h4><button class="opt" data-k="A">A. 全忘/全留</button><button class="opt" data-k="B">B. 全留/全忘</button><button class="opt" data-k="C">C. 无意义</button><button class="opt" data-k="D">D. 都是0.5</button><div class="explain">💡 解析：Sigmoid开关。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · C_t 更新是？</h4><button class="opt" data-k="A">A. f·旧C + i·候选（加法）</button><button class="opt" data-k="B">B. 连乘</button><button class="opt" data-k="C">C. 随机</button><button class="opt" data-k="D">D. 置零</button><div class="explain">💡 解析：加法是关键。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · LSTM能记长的原因是？</h4><button class="opt" data-k="A">A. 加法传送带避免连乘衰减</button><button class="opt" data-k="B">B. 参数少</button><button class="opt" data-k="C">C. 不用训练</button><button class="opt" data-k="D">D. 靠运气</button><div class="explain">💡 解析：梯度直通。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · LSTM代价是？</h4><button class="opt" data-k="A">A. 参数约4倍、更吃算力带宽</button><button class="opt" data-k="B">B. 更轻</button><button class="opt" data-k="C">C. 不需要GPU</button><button class="opt" data-k="D">D. 无代价</button><div class="explain">💡 解析：精度换资源。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>默画三门位置并标注 f/i/o 各控哪条线。</p></div>
+<div class="nav2"><a href="day11.html">← 上一天</a><a href="index.html">目录</a><a href="day13.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

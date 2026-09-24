@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第7天 周复习：多分类反向 + 数据并行初识</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第7天 / 28</span><span class="badge green">第1周 · 深度学习入门</span> <span class="badge amber">约50分钟</span>
+<h2>周复习：多分类反向 + 数据并行初识</h2>
+<div class="tips">📖 对应 Ch3（下）+ Week1 总测</div>
+<div class="kv"><div><b>反向更新</b><br>15分钟</div><div><b>数据并行伏笔</b><br>15分钟</div><div><b>Week1总测</b><br>20分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>说出多分类反向：概率误差→调权重</li><li>理解数据并行：数据分片、多 GPU 各算一份</li><li>完成 Week1 自测 ≥80 分</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="7">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 多分类的反向：错哪调哪</h3><p>前向得概率 p，反向算 p 与真实 y 的差，再按“输入贡献”分摊到各权重：猜错的类对应权重要大调，猜对的微调。书 p84-86 给出梯度与 Δw 计算，逻辑与 Ch2 一致，只是输出从 1 个变 10 个。</p><h3>2. 数据并行初识（关键伏笔）</h3><p>MNIST 6万张可切成 micro-batch 分给多 GPU，各自算梯度再同步（AllReduce）。好处是快，代价是“每次同步都要走网络”。这正是 Ch8、Ch10-14 要解决的：同步流量 = elephant flow，网络稍差就拖慢整体。先记住结论，后面展开。</p><h3>3. Week1 自查清单</h3><p>能默写 z 公式、Sigmoid/ReLU 区别、前向→误差→反向→更新闭环、Softmax+交叉熵、数据并行一句话？缺哪个回看哪天。进度条应到 7/28（25%）。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch03_p085_x1836.jpg" alt="梯度计算：概率误差按输入贡献分摊。"><figcaption>🔍 梯度计算：概率误差按输入贡献分摊。<br><span class="src">📖 原图 · Ch3 p85 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch03_p090_x1914.jpg" alt="权重更新后：再测 Loss 应下降；数据切分后同步即网络流量。"><figcaption>🔍 权重更新后：再测 Loss 应下降；数据切分后同步即网络流量。<br><span class="src">📖 原图 · Ch3 p90 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>数据并行同步像多台设备同时 commit 再对账：对账越频繁，一致性越好，但控制面流量越大。AI 同理。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 多分类反向的核心是？</h4><button class="opt" data-k="A">A. 按概率误差分摊调各权重</button><button class="opt" data-k="B">B. 随机调</button><button class="opt" data-k="C">C. 只调偏置</button><button class="opt" data-k="D">D. 不调</button><div class="explain">💡 解析：错哪调哪。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 数据并行是？</h4><button class="opt" data-k="A">A. 数据分片、多GPU并行算梯度再同步</button><button class="opt" data-k="B">B. 模型切开</button><button class="opt" data-k="C">C. 单卡跑</button><button class="opt" data-k="D">D. 不切分</button><div class="explain">💡 解析：Ch8 会系统讲。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 数据并行同步带来什么？</h4><button class="opt" data-k="A">A. 大量网络同步流量</button><button class="opt" data-k="B">B. 零流量</button><button class="opt" data-k="C">C. 只用 CPU</button><button class="opt" data-k="D">D. 不需要网络</button><div class="explain">💡 解析：AllReduce elephant flow。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 交叉熵适合？</h4><button class="opt" data-k="A">A. 分类任务</button><button class="opt" data-k="B">B. 回归</button><button class="opt" data-k="C">C. 排序无关</button><button class="opt" data-k="D">D. 都不适合</button><div class="explain">💡 解析：分类首选。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · Week1 闭环是？</h4><button class="opt" data-k="A">A. 前向→误差→反向→更新→再验证</button><button class="opt" data-k="B">B. 只前向</button><button class="opt" data-k="C">C. 只反向</button><button class="opt" data-k="D">D. 直接部署</button><div class="explain">💡 解析：牢记闭环。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>Week1 总复述：用 5 分钟给同事讲清“神经元→反向→多分类→数据并行”链条。</p></div>
+<div class="nav2"><a href="day06.html">← 上一天</a><a href="index.html">目录</a><a href="day08.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

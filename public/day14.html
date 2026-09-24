@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第14天 Transformer：QKV 注意力全解</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第14天 / 28</span><span class="badge green">第2周 · 模型架构</span> <span class="badge amber">约60分钟</span>
+<h2>Transformer：QKV 注意力全解</h2>
+<div class="tips">📖 对应 Ch7 Transformer（下）</div>
+<div class="kv"><div><b>QKV</b><br>20分钟</div><div><b>Attention+残差</b><br>20分钟</div><div><b>FFN+Softmax</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>说出 Q/K/V 各自的角色</li><li>写出 Attention 缩放点积流程</li><li>理解残差+归一化与走网络的意义</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="14">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. QKV：查询、钥匙、内容</h3><p>每个位置的嵌入派生出 Q（我要找什么）、K（我提供什么）、V（我的内容）。Q·Kᵀ 算相关度（clear 作动词时更关注 table），除以 √d_k 防过大，再 Softmax 得权重，加权 V 即上下文向量。书 p161-163 一步步算。</p><h3>2. Attention + 残差归一</h3><p>多头 Attention 并行看不同关系（语法/语义/位置）。残差（输入+输出）+ LayerNorm 让深层可训练，防退化。解码器堆叠 N 层后，顶层向量经 Softmax 预测下一个词概率 P（p161 全景图务必精读）。</p><h3>3. 为什么 LLM 逼出大网络？</h3><p>参数百亿、d_model 上万、序列上千，单卡放不下、单机算不动，必须 Ch8 的三维并行 + Part II 的 lossless Fabric。本章结论即全书转折：模型越大，网络越关键。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch07_p161_x2926.jpg" alt="Decoder全景：Attention→Add&amp;Norm→FFN→Softmax 预测下词。"><figcaption>🔍 Decoder全景：Attention→Add&amp;Norm→FFN→Softmax 预测下词。<br><span class="src">📖 原图 · Ch7 p161 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch07_p165_x2993.jpg" alt="QKV 注意力：Q查K得权重，加权V得上下文。"><figcaption>🔍 QKV 注意力：Q查K得权重，加权V得上下文。<br><span class="src">📖 原图 · Ch7 p165 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>QKV 像路由查找：Q 是目的前缀，K 是 RIB 表项，V 是下一跳；Attention 权重像 ECMP 权重，按匹配度分流。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · Q/K/V 中决定权重的是？</h4><button class="opt" data-k="A">A. Q·Kᵀ</button><button class="opt" data-k="B">B. V</button><button class="opt" data-k="C">C. 位置</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：相关度打分。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 除以√d_k 的目的是？</h4><button class="opt" data-k="A">A. 防点积过大、Softmax饱和</button><button class="opt" data-k="B">B. 加速</button><button class="opt" data-k="C">C. 装饰</button><button class="opt" data-k="D">D. 降维</button><div class="explain">💡 解析：缩放防饱和。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 残差+Norm 的作用是？</h4><button class="opt" data-k="A">A. 让深层可训练、防退化</button><button class="opt" data-k="B">B. 增加丢包</button><button class="opt" data-k="C">C. 无用</button><button class="opt" data-k="D">D. 减参</button><div class="explain">💡 解析：直通+稳定。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 多头注意力的好处是？</h4><button class="opt" data-k="A">A. 并行捕捉多种关系</button><button class="opt" data-k="B">B. 变慢</button><button class="opt" data-k="C">C. 只看一种</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：分头看语法语义。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · LLM与网络的关系是？</h4><button class="opt" data-k="A">A. 越大越依赖并行+lossless fabric</button><button class="opt" data-k="B">B. 无关</button><button class="opt" data-k="C">C. 单卡即可</button><button class="opt" data-k="D">D. 不需要同步</button><div class="explain">💡 解析：转折结论。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>用 Q/K/V 比喻一次故障排查：Q=现象，K=知识库，V=处置动作。</p></div>
+<div class="nav2"><a href="day13.html">← 上一天</a><a href="index.html">目录</a><a href="day15.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

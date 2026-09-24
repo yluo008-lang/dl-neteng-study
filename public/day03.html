@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第3天 激活函数 Sigmoid 与 ReLU</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第3天 / 28</span><span class="badge green">第1周 · 深度学习入门</span> <span class="badge amber">约55分钟</span>
+<h2>激活函数 Sigmoid 与 ReLU</h2>
+<div class="tips">📖 对应 Ch1 Artificial Neuron（下）</div>
+<div class="kv"><div><b>Sigmoid</b><br>20分钟</div><div><b>ReLU</b><br>15分钟</div><div><b>Network Impact</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>解释 Sigmoid 把 z 压到 0-1 的作用</li><li>说出 ReLU 为什么在深层网络更常用</li><li>理解 Network Impact：训练流量从哪来</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="3">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. Sigmoid：把任意 z 变成概率</h3><p>σ(z)=1/(1+e^{-z})，z→-∞ 时 ŷ→0，z→+∞ 时 ŷ→1，z=0 时 ŷ=0.5。好处是输出可解释为概率（比如“拥塞概率 90%”）；坏处是两端梯度≈0，深层网络会“学不动”（饱和），第5章还会回来讲饱和神经元。</p><h3>2. ReLU：现代默认选择</h3><p>ReLU(z)=max(0,z)，z&gt;0 原样通过，z≤0 置零。计算极快，梯度不饱和，深层网络训练更快。缺点是“死神经元”（长期为0）。书 p45 对比两者：浅层演示用 Sigmoid 好讲，深层实战用 ReLU 居多。</p><h3>3. Network Impact：网工的第一课</h3><p>Ch1 末尾 Network Impact 点题：即使单个神经元训练，权重、数据、代码都要放 GPU 显存；数据稍大就需要多 GPU，流量随之而来。记住这个伏笔：Ch8 并行策略 + Ch9 RDMA 都是为了解决“模型放不下、数据传不动”。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch01_p043_x1226.jpg" alt="Sigmoid 曲线：中间陡、两端平。两端平就是梯度消失的源头。"><figcaption>🔍 Sigmoid 曲线：中间陡、两端平。两端平就是梯度消失的源头。<br><span class="src">📖 原图 · Ch1 p43 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch01_p045_x1266.jpg" alt="ReLU 对比：正区间线性通过，负区间置零，缓解饱和。"><figcaption>🔍 ReLU 对比：正区间线性通过，负区间置零，缓解饱和。<br><span class="src">📖 原图 · Ch1 p45 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>Sigmoid 像 policer：超过阈值就压平；ReLU 像“低于阈值丢弃、高于阈值放行”。饱和≈队列满了再加压也无反应。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · Sigmoid 输出范围是？</h4><button class="opt" data-k="A">A. 0-1</button><button class="opt" data-k="B">B. -∞~+∞</button><button class="opt" data-k="C">C. 0~∞</button><button class="opt" data-k="D">D. 只有0/1</button><div class="explain">💡 解析：压缩到(0,1)，可做概率。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · Sigmoid 两端梯度接近？</h4><button class="opt" data-k="A">A. 0，会导致学不动</button><button class="opt" data-k="B">B. 无穷大</button><button class="opt" data-k="C">C. 恒为1</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：饱和区梯度消失。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · ReLU 定义是？</h4><button class="opt" data-k="A">A. max(0,z)</button><button class="opt" data-k="B">B. 1/(1+e^-z)</button><button class="opt" data-k="C">C. z²</button><button class="opt" data-k="D">D. sin(z)</button><div class="explain">💡 解析：正值通过，负值置零。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · 深层网络常用 ReLU 的原因是？</h4><button class="opt" data-k="A">A. 计算快、不易饱和</button><button class="opt" data-k="B">B. 更复杂</button><button class="opt" data-k="C">C. 输出一定是概率</button><button class="opt" data-k="D">D. 必须配 Sigmoid</button><div class="explain">💡 解析：缓解梯度消失 + 算得快。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · Ch1 Network Impact 的核心观点是？</h4><button class="opt" data-k="A">A. 模型稍大就需要多 GPU，网络流量随之而来</button><button class="opt" data-k="B">B. 网络与 AI 无关</button><button class="opt" data-k="C">C. 单机永远够用</button><button class="opt" data-k="D">D. 不需要 RDMA</button><div class="explain">💡 解析：为 Part II 埋伏笔。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>用一句话对比 Sigmoid vs ReLU，并想一个网络中的“饱和”例子（如 policer 压平）。</p></div>
+<div class="nav2"><a href="day02.html">← 上一天</a><a href="index.html">目录</a><a href="day04.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

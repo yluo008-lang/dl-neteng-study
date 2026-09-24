@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第8天 CNN 卷积与池化</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第8天 / 28</span><span class="badge green">第2周 · 模型架构</span> <span class="badge amber">约55分钟</span>
+<h2>CNN 卷积与池化</h2>
+<div class="tips">📖 对应 Ch4 CNN（上）</div>
+<div class="kv"><div><b>为什么不用全连接</b><br>15分钟</div><div><b>卷积过程</b><br>20分钟</div><div><b>池化</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>算清全连接处理高清图的内存灾难</li><li>解释卷积核滑动点乘的含义</li><li>说出 MaxPooling 的作用</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="8">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 全连接的灾难</h3><p>一张 300dpi、8×10英寸 RGB 图约 2000万像素×3通道≈6000万输入。若隐藏层 1000 神经元，仅一层就 600亿权重，放不下、算不动、还易过拟合。FNN 对位置变化也敏感：数字挪几像素就认不出。CNN 为图像而生。</p><h3>2. 卷积：小窗口滑动找特征</h3><p>用小卷积核（如 3×3）在图上滑动，每步做点乘求和，得到特征图（feature map）。不同核找不同特征：横边、竖边、角点。参数共享（同一核扫全图）大幅省参；平移不变性（目标挪位仍能命中）大幅提泛化。书 p95-100 第一个卷积层一步步演示。</p><h3>3. MaxPooling：降维+抓重点</h3><p>在 2×2 窗口取最大值，尺寸减半，保留最强响应，抗微小位移，还省算力。典型结构：卷积→ReLU→池化→卷积→池化→全连接分类。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch04_p096_x1993.jpg" alt="卷积过程：3×3核滑动点乘，生成特征图。"><figcaption>🔍 卷积过程：3×3核滑动点乘，生成特征图。<br><span class="src">📖 原图 · Ch4 p96 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch04_p100_x2061.jpg" alt="MaxPooling：2×2取最大，降维保留关键特征。"><figcaption>🔍 MaxPooling：2×2取最大，降维保留关键特征。<br><span class="src">📖 原图 · Ch4 p100 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>卷积核像 ACL 模板在包头滑动匹配；池化像采样（sFlow 1:N）保留大流、 ।丢细节省带宽。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · FNN处理高清图的主要问题是？</h4><button class="opt" data-k="A">A. 参数爆炸、内存放不下</button><button class="opt" data-k="B">B. 太准确</button><button class="opt" data-k="C">C. 不需要训练</button><button class="opt" data-k="D">D. 只能处理文字</button><div class="explain">💡 解析：6000万输入×1000神经元=灾难。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 卷积核的作用是？</h4><button class="opt" data-k="A">A. 滑动点乘提取局部特征</button><button class="opt" data-k="B">B. 随机丢包</button><button class="opt" data-k="C">C. 加密</button><button class="opt" data-k="D">D. 路由</button><div class="explain">💡 解析：小窗口找边角纹理。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 参数共享的好处是？</h4><button class="opt" data-k="A">A. 大幅减少参数、抗平移</button><button class="opt" data-k="B">B. 增加参数</button><button class="opt" data-k="C">C. 变慢</button><button class="opt" data-k="D">D. 无用</button><div class="explain">💡 解析：同一核扫全图。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · MaxPooling 2×2 的效果是？</h4><button class="opt" data-k="A">A. 长宽减半、保留最强响应</button><button class="opt" data-k="B">B. 放大一倍</button><button class="opt" data-k="C">C. 不变</button><button class="opt" data-k="D">D. 变彩色</button><div class="explain">💡 解析：降维+抓重点。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · CNN典型顺序是？</h4><button class="opt" data-k="A">A. 卷积→ReLU→池化→全连接</button><button class="opt" data-k="B">B. 全连接→卷积</button><button class="opt" data-k="C">C. 只池化</button><button class="opt" data-k="D">D. 只全连接</button><div class="explain">💡 解析：先提特征再分类。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>心算：224×224×3 输入，3×3×3核（1个）有多少参数？对比全连接1000神经元。</p></div>
+<div class="nav2"><a href="day07.html">← 上一天</a><a href="index.html">目录</a><a href="day09.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第10天 RNN：会记忆的网络（前向）</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第10天 / 28</span><span class="badge green">第2周 · 模型架构</span> <span class="badge amber">约55分钟</span>
+<h2>RNN：会记忆的网络（前向）</h2>
+<div class="tips">📖 对应 Ch5 RNN（上）</div>
+<div class="kv"><div><b>序列与隐藏状态</b><br>20分钟</div><div><b>权重矩阵</b><br>15分钟</div><div><b>原图精读</b><br>10分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>解释隐藏状态 h_t 是“记忆”</li><li>写出 h_t 与输出的前向式</li><li>对比 FNN/CNN 与 RNN 的输入差异</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="10">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 为什么需要记忆？</h3><p>文字、语音、时序流量都是序列：当前词义依赖上文。FNN/CNN 只看当前输入，RNN 把上一时刻隐藏状态 h_{t-1} 与当前输入 x_t 一起喂给隐藏层，得到 h_t，再算输出。公式：h_t = tanh(W_h·h_{t-1} + W_x·x_t + b)。h 就是记忆载体。</p><h3>2. 权重矩阵：三套旋钮</h3><p>W_x（输入→隐藏）、W_h（记忆→隐藏）、W_y（隐藏→输出）。关键是 W_h、W_x 在所有时间步共享——像同一套规则处理每个包，参数省、可处理变长序列。书 p113-116 以文本数据集演示加权求和与输出层。</p><h3>3. 第二时间步：记忆滚动</h3><p>t=2 时，h_1（t=1 的记忆）与 x_2 共同决定 h_2。如此滚动，理论上 h_t 包含全部历史。这正是 RNN 能做“根据上文预测下词”、网工能做“根据历史流量预测拥塞”的原因。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch05_p112_x2239.jpg" alt="RNN展开图：同一单元在时间上复制，h 在步间传递。"><figcaption>🔍 RNN展开图：同一单元在时间上复制，h 在步间传递。<br><span class="src">📖 原图 · Ch5 p112 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch05_p115_x2280.jpg" alt="隐藏层加权求和：x_t 与 h_{t-1} 共同决定 h_t。"><figcaption>🔍 隐藏层加权求和：x_t 与 h_{t-1} 共同决定 h_t。<br><span class="src">📖 原图 · Ch5 p115 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>h_t 像滑动窗口的 telemetry 状态库：当前判决 = 当前采样 + 历史基线。W 共享像同一阈值模板应用于每个周期。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · RNN隐藏状态的作用是？</h4><button class="opt" data-k="A">A. 携带历史记忆</button><button class="opt" data-k="B">B. 装饰</button><button class="opt" data-k="C">C. 只存当前输入</button><button class="opt" data-k="D">D. 输出标签</button><div class="explain">💡 解析：h_t 是记忆。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · h_t 由什么决定？</h4><button class="opt" data-k="A">A. x_t与h_{t-1}共同决定</button><button class="opt" data-k="B">B. 只由x_t</button><button class="opt" data-k="C">C. 随机</button><button class="opt" data-k="D">D. 只由输出</button><div class="explain">💡 解析：当前+历史。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · RNN权重在时间步间？</h4><button class="opt" data-k="A">A. 共享</button><button class="opt" data-k="B">B. 每步全新</button><button class="opt" data-k="C">C. 不用权重</button><button class="opt" data-k="D">D. 只用一次</button><div class="explain">💡 解析：共享才能处理变长。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · RNN适合？</h4><button class="opt" data-k="A">A. 序列数据（文字/时序流量）</button><button class="opt" data-k="B">B. 单张静态图</button><button class="opt" data-k="C">C. 与顺序无关</button><button class="opt" data-k="D">D. 都不适合</button><div class="explain">💡 解析：为序列而生。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · 与FNN最大区别是？</h4><button class="opt" data-k="A">A. 引入跨时间步的回路/记忆</button><button class="opt" data-k="B">B. 没有权重</button><button class="opt" data-k="C">C. 不用激活</button><button class="opt" data-k="D">D. 无区别</button><div class="explain">💡 解析：回路即记忆。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>用流量预测举例：t时刻拥塞判断需要哪两个输入？对应 x_t 和 h_{t-1} 各是什么？</p></div>
+<div class="nav2"><a href="day09.html">← 上一天</a><a href="index.html">目录</a><a href="day11.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

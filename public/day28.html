@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第28天 结业：总复习与综合实战</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第28天 / 28</span><span class="badge green">第4周 · AI Fabric实战</span> <span class="badge amber">约60分钟</span>
+<h2>结业：总复习与综合实战</h2>
+<div class="tips">📖 对应 全书串联 + 结业测试</div>
+<div class="kv"><div><b>全链串讲</b><br>25分钟</div><div><b>实战排错</b><br>15分钟</div><div><b>结业测</b><br>20分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>一图串起 神经元→并行→RDMA→Fabric→NCCL</li><li>完成 10 题结业测 ≥80</li><li>制定下月实践计划</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="28">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 全链一图</h3><p>数据（MNIST/文本）→模型（FNN/CNN/RNN/LSTM/Transformer）→并行（数据/流水/Tensor）→通信（RDMA Write+AllReduce）→Fabric（Rail/ECN/PFC/喷洒）→启动（NCCL）。任一环拉胯，训练就慢。网工的价值在后三环，但必须懂前三环才能预判流量。</p><h3>2. 实战排错五问</h3><p>① jobs起不来？查Master/端口/路由 ②初训快、同步慢？查ECMP极化→切喷洒 ③PFC风暴？查ECN阈值+Drain+Watchdog ④单卡慢拖全体？查straggler+PCIe ⑤跨Rail慢？查Rail亲和+拓扑。</p><h3>3. 下月计划</h3><p>Week5-6：在测试床复现 ECN/PFC 计数器 + 抓 RDMA PSN；读懂 NCCL 日志；给现有 Fabric 出一份 AI-ready 评估（MTU/队列/喷洒/拓扑）。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch08_p180_x3216.jpg" alt="串联起点：并行决定流量模式，是网络设计的输入。"><figcaption>🔍 串联起点：并行决定流量模式，是网络设计的输入。<br><span class="src">📖 原图 · Ch8 p180（串讲） · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch10_p224_x3860.jpg" alt="串联落点：一切优化落到 Rail-Spine Fabric 与排错。"><figcaption>🔍 串联落点：一切优化落到 Rail-Spine Fabric 与排错。<br><span class="src">📖 原图 · Ch10 p224（串讲） · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>结业不是终点：把“模型→流量→网络→排错”变成肌肉记忆，下次看到 AllReduce 风暴，你能说出它从哪层来、走哪条路、卡在哪队列。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · 训练慢，先分清？</h4><button class="opt" data-k="A">A. 模型/通信/网络哪环</button><button class="opt" data-k="B">B. 直接加带宽</button><button class="opt" data-k="C">C. 重启</button><button class="opt" data-k="D">D. 换网线</button><div class="explain">💡 解析：分层定位。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · PFC风暴先查？</h4><button class="opt" data-k="A">A. ECN阈值+Drain+Watchdog</button><button class="opt" data-k="B">B. 主机名</button><button class="opt" data-k="C">C. 时间</button><button class="opt" data-k="D">D. 颜色</button><div class="explain">💡 解析：联动。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · 极化首选？</h4><button class="opt" data-k="A">A. 包喷洒</button><button class="opt" data-k="B">B. 单路</button><button class="opt" data-k="C">C. 降速</button><button class="opt" data-k="D">D. 不管</button><div class="explain">💡 解析：打碎大象。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · AllReduce慢表现为？</h4><button class="opt" data-k="A">A. GPU周期性掉零等同步</button><button class="opt" data-k="B">B. 一直100%</button><button class="opt" data-k="C">C. 无表现</button><button class="opt" data-k="D">D. 更快</button><div class="explain">💡 解析：等网。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · AI-ready评估不含？</h4><button class="opt" data-k="A">A. 办公室绿植</button><button class="opt" data-k="B">B. MTU/ECN/PFC</button><button class="opt" data-k="C">C. 喷洒</button><button class="opt" data-k="D">D. 拓扑</button><div class="explain">💡 解析：前三者必查。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第6题 · Sigmoid vs ReLU？</h4><button class="opt" data-k="A">A. 前者压0-1易饱和，后者正通零断常用深层</button><button class="opt" data-k="B">B. 一样</button><button class="opt" data-k="C">C. 反向</button><button class="opt" data-k="D">D. 无区别</button><div class="explain">💡 解析：Week1。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第7题 · LSTM防遗忘靠？</h4><button class="opt" data-k="A">A. 加法传送带+三门</button><button class="opt" data-k="B">B. 更少参数</button><button class="opt" data-k="C">C. 运气</button><button class="opt" data-k="D">D. 单层</button><div class="explain">💡 解析：Week2。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第8题 · QKV权重由？</h4><button class="opt" data-k="A">A. Q·Kᵀ</button><button class="opt" data-k="B">B. V</button><button class="opt" data-k="C">C. 随机</button><button class="opt" data-k="D">D. 位置</button><div class="explain">💡 解析：Week2。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第9题 · R_Key作用？</h4><button class="opt" data-k="A">A. 远端写凭证</button><button class="opt" data-k="B">B. 本地</button><button class="opt" data-k="C">C. 无</button><button class="opt" data-k="D">D. 加密</button><div class="explain">💡 解析：Week3。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第10题 · 启动先拿？</h4><button class="opt" data-k="A">A. NCCL UniqueId</button><button class="opt" data-k="B">B. 不需要</button><button class="opt" data-k="C">C. 域名</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：Week4。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>给自己打分 + 写下月 3 个实践动作，打卡即结业！</p></div>
+<div class="nav2"><a href="day27.html">← 上一天</a><a href="index.html">目录</a><a href="index.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>

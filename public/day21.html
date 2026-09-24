@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>第21天 DCQCN 全流程与配置</title><link rel="stylesheet" href="css/style.css"></head><body>
+<div class="topbar"><div class="topbar-inner"><div class="logo">DL</div><div><h1>《Deep Learning for Network Engineers》4周学习站</h1><small>Toni Pasanen · 每天45-60分钟 · 手机友好</small></div></div></div>
+<div class="wrap">
+
+<div class="card"><span class="badge">第21天 / 28</span><span class="badge green">第3周 · 并行与RDMA</span> <span class="badge amber">约60分钟</span>
+<h2>DCQCN 全流程与配置</h2>
+<div class="tips">📖 对应 Ch11 DCQCN（下）</div>
+<div class="kv"><div><b>14步暂停恢复</b><br>25分钟</div><div><b>ECN先于xOFF</b><br>10分钟</div><div><b>QoS配置六步</b><br>15分钟</div><div><b>测验</b><br>10分钟</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">🎯 今日目标</h3><ul><li>复述 PFC 8步暂停 + 恢复</li><li>解释 ECN 必须先于 xOFF</li><li>列出 DCQCN 六步配置</li></ul>
+<div class="checkin"><button class="btn green" data-checkin-btn data-day="21">完成本日学习打卡</button><span class="tips">进度自动保存在本机</span></div></div>
+<div class="card"><h3 style="border:0;padding:0">📖 细节讲解</h3><h3>1. 14 步：拥塞如何蔓延与恢复</h3><p>书 p247-253 以 Rail C→Spine1→Rail A/B 为例：egress 溢出→超 xOFF→发 PFC→上游停队列→上游 egress 堵→继续向上游发 PFC→…→下游 drain 后发 PFC resume 逐级恢复。网工必看：暂停会向上游蔓延，不及时 drain 就 PFC 风暴。Watchdog 防死锁。</p><h3>2. ECN 必须先于 xOFF</h3><p>p258 金句：ECN 阈值 &lt; xOFF 阈值，让端点先降速，能不 pause 就不 pause。PFC 是最后手段，不是常规手段。调参顺序：先 ECN 灵敏，后 xOFF 兜底。</p><h3>3. 六步配置（QoS）</h3><p>① 分类（DSCP→QoS组）② 内部标签/队列 ③ 调度（DWRR/严格）④ 队列使能 PFC+Watchdog ⑤ 绑定策略 ⑥ 接口使能。书 p262-269 给 Cisco/Nexus 示例，抄时注意：分类与队列全网一致，否则 PFC 错队。</p></div>
+<div class="card"><h3 style="border:0;padding:0">🖼️ 原书图解 + 解读（点击放大）</h3><figure class="figure"><img loading="lazy" src="assets/orig/ch11_p250_x4168.jpg" alt="暂停蔓延：egress堵→向上游发PFC，逐级停。"><figcaption>🔍 暂停蔓延：egress堵→向上游发PFC，逐级停。<br><span class="src">📖 原图 · Ch11 p250 · 点击放大</span></figcaption></figure><figure class="figure"><img loading="lazy" src="assets/orig/ch11_p262_x4333.jpg" alt="DCQCN配置：分类→队列→调度→PFC→绑定→接口，六步缺一不可。"><figcaption>🔍 DCQCN配置：分类→队列→调度→PFC→绑定→接口，六步缺一不可。<br><span class="src">📖 原图 · Ch11 p262 · 点击放大</span></figcaption></figure></div>
+<div class="card"><div class="netview">🌐 <b>网络工程师视角：</b>DCQCN 像“黄灯+红灯联动”：黄灯（ECN）先降流，红灯（PFC）兜底；Watchdog 像死锁检测，超时强放行防全城瘫痪。</div></div>
+<div class="card"><h3 style="border:0;padding:0">✅ 课后强化（点选项即判分）</h3><div class="quiz" data-ans="A"><h4>第1题 · PFC暂停方向是？</h4><button class="opt" data-k="A">A. 向拥塞上游蔓延</button><button class="opt" data-k="B">B. 向下游</button><button class="opt" data-k="C">C. 不动</button><button class="opt" data-k="D">D. 随机</button><div class="explain">💡 解析：逐级停。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第2题 · 恢复靠？</h4><button class="opt" data-k="A">A. drain后发resume逐级恢复</button><button class="opt" data-k="B">B. 自动</button><button class="opt" data-k="C">C. 重启</button><button class="opt" data-k="D">D. 不需要</button><div class="explain">💡 解析：14步后半。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第3题 · ECN与xOFF阈值关系？</h4><button class="opt" data-k="A">A. ECN &lt; xOFF，先降速后暂停</button><button class="opt" data-k="B">B. 相反</button><button class="opt" data-k="C">C. 相等</button><button class="opt" data-k="D">D. 无关</button><div class="explain">💡 解析：p258。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第4题 · Watchdog 作用？</h4><button class="opt" data-k="A">A. 防PFC死锁</button><button class="opt" data-k="B">B. 加速</button><button class="opt" data-k="C">C. 加密</button><button class="opt" data-k="D">D. 省电</button><div class="explain">💡 解析：超时放行。（答案 A）</div></div>
+<div class="quiz" data-ans="A"><h4>第5题 · PFC错队的主因是？</h4><button class="opt" data-k="A">A. 全网分类/队列不一致</button><button class="opt" data-k="B">B. 网线</button><button class="opt" data-k="C">C. 主机名</button><button class="opt" data-k="D">D. 时间</button><div class="explain">💡 解析：DCBX要一致。（答案 A）</div></div></div>
+<div class="card"><h3 style="border:0;padding:0">✍️ 动手任务</h3><p>默写六步配置，并标出哪步最易错（分类一致性）。</p></div>
+<div class="nav2"><a href="day20.html">← 上一天</a><a href="index.html">目录</a><a href="day22.html">下一天 →</a></div>
+
+</div>
+<div class="lightbox" id="lightbox"><img alt="原图放大"></div>
+<div class="bottomnav"><div class="bottomnav-inner">
+<a href="index.html" class="">🏠<br>首页</a>
+<a href="day01.html" class="active">📚<br>课程</a>
+<a href="index.html#plan" class="">🗓<br>计划</a>
+<a href="index.html#how" class="">❓<br>用法</a>
+</div></div>
+<script src="js/app.js"></script>
+</body></html>
